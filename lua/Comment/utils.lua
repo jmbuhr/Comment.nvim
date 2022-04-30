@@ -1,9 +1,10 @@
+---@mod comment.utils Comment utilities
+
 local A = vim.api
 
 local U = {}
 
----Range of the selection that needs to be commented
----@class CRange
+---@class CRange Range of the selection that needs to be commented
 ---@field srow number Starting row
 ---@field scol number Starting column
 ---@field erow number Ending row
@@ -11,34 +12,40 @@ local U = {}
 
 ---@alias CLines string[] List of lines inside the start and end index
 
----Comment modes - Can be manual or computed in operator-pending phase
----@class CMode
+---@class CMode Comment modes - Can be manual or computed in operator-pending phase
 ---@field toggle number Toggle action
 ---@field comment number Comment action
 ---@field uncomment number Uncomment action
-U.cmode = {
-    toggle = 0,
-    comment = 1,
-    uncomment = 2,
-}
 
----Comment string types
----@class CType
+---@class CType Comment string types
 ---@field line number Use linewise commentstring
 ---@field block number Use blockwise commentstring
-U.ctype = {
-    line = 1,
-    block = 2,
-}
 
----Comment motion types
----@class CMotion
+---@class CMotion Comment motion types
 ---@field _ number Compute from vim mode (@see VMode)
 ---@field line number Line motion (ie. `gc2j`)
 ---@field char number Character/left-right motion (ie. `gc2j`)
 ---@field block number Visual operator-pending motion
 ---@field v number Visual motion
 ---@field V number Visual-line motion
+
+---An object containing all the comment modes
+---@type CMode
+U.cmode = {
+    toggle = 0,
+    comment = 1,
+    uncomment = 2,
+}
+
+---An object containing all the comment types
+---@type CMode
+U.ctype = {
+    line = 1,
+    block = 2,
+}
+
+---An object containing all the comment motions
+---@type CMode
 U.cmotion = {
     _ = 0,
     line = 1,
@@ -177,7 +184,8 @@ function U.unwrap_cstr(cstr)
     return not U.is_empty(lcs) and vim.trim(lcs), not U.is_empty(rcs) and vim.trim(rcs)
 end
 
----Unwraps the commentstring by taking it from the following places in the respective order.
+---Unwraps the commentstring by taking it from the following places
+---in the respective order.
 ---1. pre_hook (optionally a string can be returned)
 ---2. ft_table (extra commentstring table in the plugin)
 ---3. commentstring (already set or added in pre_hook)
@@ -201,7 +209,7 @@ end
 ---@param lcs string Left side of the commentstring
 ---@param rcs string Right side of the commentstring
 ---@param padding string Padding chars b/w comment and line
----@param min_indent string|nil Pre-determine indentation (useful) when dealing w/ multiple lines
+---@param min_indent? string Pre-determine indentation
 ---@return string string Commented string
 function U.comment_str(ln, lcs, rcs, padding, min_indent)
     if U.is_empty(ln) then

@@ -1,3 +1,5 @@
+---@mod comment.api Comment APIs
+
 local U = require('Comment.utils')
 local Ex = require('Comment.extra')
 local Op = require('Comment.opfunc')
@@ -6,9 +8,9 @@ local A = vim.api
 
 local C = {}
 
---------------------------------------
--------------- CORE API --------------
---------------------------------------
+-- -----------------------------------
+-- ----------- CORE API --------------
+-- -----------------------------------
 
 --######### LINEWISE #########--
 
@@ -80,9 +82,9 @@ function C.toggle_blockwise_count_op(_, cfg)
     C.toggle_blockwise_count(cfg)
 end
 
----------------------------------------
--------------- EXTRA API --------------
----------------------------------------
+-- ------------------------------------
+-- ----------- EXTRA API --------------
+-- ------------------------------------
 
 --######### LINEWISE #########--
 
@@ -124,9 +126,9 @@ function C.insert_blockwise_eol(cfg)
     Ex.insert_eol(U.ctype.block, cfg or Config:get())
 end
 
-------------------------------------------
--------------- EXTENDED API --------------
-------------------------------------------
+-- ---------------------------------------
+-- ----------- EXTENDED API --------------
+-- ---------------------------------------
 
 --######### LINEWISE #########--
 
@@ -198,11 +200,13 @@ function C.uncomment_current_blockwise_op(vmode, cfg)
     Op.opfunc(vmode, cfg, U.cmode.uncomment, U.ctype.block, U.cmotion.line)
 end
 
---------------------------------------------
--------------- ADDITIONAL API --------------
---------------------------------------------
+-- -----------------------------------------
+-- ----------- ADDITIONAL API --------------
+-- -----------------------------------------
 
 ---Wraps API function with `lockmarks` to preserve marks while changing text/lines
+---@type table
+---@usage `require('Comment.api').locked.toggle_current_linewise()`
 C.locked = setmetatable({}, {
     __index = function(_, cb)
         ---Actual function which will be attached to operatorfunc
@@ -227,6 +231,7 @@ function C.call(cb)
     Config.count = vim.v.count
 end
 
+---@private
 ---Configures the whole plugin
 ---@param config Config
 ---@return Config
